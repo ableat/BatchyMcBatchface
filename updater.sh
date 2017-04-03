@@ -11,8 +11,8 @@ GITHUB_ORG_NAME=""
 GITHUB_REPOS=(
 )
 
-# calculated variables
-two_weeks_from_today=$(date -j -v+${MILESTONE_DURATION} -u +"%Y-%m-%dT14:00:00Z")
+# Calculated Variables
+milestone_due_date=$(date -j -v+${MILESTONE_DURATION} -u +"%Y-%m-%dT14:00:00Z")
 
 gh_repos_url="https://api.github.com/repos"
 gh_up="${GITHUB_USERNAME}:${GITHUB_TOKEN}"
@@ -28,7 +28,7 @@ for gh_repo in "${GITHUB_REPOS[@]}"; do
 
     ## Create a new Milestone
     echo "Creating ${MILESTONE_TITLE}..."
-    milestone_number=$(curl -s -X "POST" "${gh_repos_url}/${GITHUB_ORG_NAME}/${gh_repo}/milestones" -H "Content-Type: application/json; charset=utf-8" -u ${gh_up} -d "{ \"title\": \"${MILESTONE_TITLE}\", \"state\": \"open\", \"description\": \"Welcome to ${MILESTONE_TITLE}. We have all kinds of cool things in store...\", \"due_on\": \"${two_weeks_from_today}\" }"  | jq .number)
+    milestone_number=$(curl -s -X "POST" "${gh_repos_url}/${GITHUB_ORG_NAME}/${gh_repo}/milestones" -H "Content-Type: application/json; charset=utf-8" -u ${gh_up} -d "{ \"title\": \"${MILESTONE_TITLE}\", \"state\": \"open\", \"description\": \"Welcome to ${MILESTONE_TITLE}. We have all kinds of cool things in store...\", \"due_on\": \"${milestone_due_date}\" }"  | jq .number)
     previous_milestone_number=$((milestone_number-1))
     [[ $previous_milestone_number -lt 0 ]] && previous_milestone_number=0
     echo "Finished creating ${MILESTONE_TITLE}"
@@ -47,6 +47,5 @@ for gh_repo in "${GITHUB_REPOS[@]}"; do
         [[ ${milestone_state} -eq "closed" ]] && echo "Milestone #${previous_milestone_number} closed sucessfully" || echo "Milestone #${previous_milestone_number} was not closed :("
     fi
 
-    echo "Completed updating ${gh_repo} repository :)"
-    echo -e
+    echo "Completed updating ${gh_repo} repository :)\n"
 done
