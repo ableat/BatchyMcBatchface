@@ -1,13 +1,13 @@
 ## Requirements
 
 ### Tools
-[jq](https://stedolan.github.io/jq/)
-[curl](https://curl.haxx.se)
+* [jq](https://stedolan.github.io/jq/)
+* [curl](https://curl.haxx.se)
 
 ### Accounts
-[GitHub Account](https://github.com/join)
-[GitHub Account Personal API Token](https://github.com/blog/1509-personal-api-tokens)
-[GitHub Organization](https://github.com/blog/674-introducing-organizations)
+* [GitHub Account](https://github.com/join)
+* [GitHub Account Personal API Token](https://github.com/blog/1509-personal-api-tokens)
+* [GitHub Organization](https://github.com/blog/674-introducing-organizations)
 
 ## Script Setup
 
