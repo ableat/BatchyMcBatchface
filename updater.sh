@@ -94,15 +94,13 @@ fi
 
 [[ -z "${MILESTONE_DURATION// }" ]] && MILESTONE_DURATION=$(cat "${CONFIG}" | jq .milestone.duration | tr -d '"')
 
-if [[ -z "${GITHUB_REPOS// }" ]]; then
-    GITHUB_REPOS=$(cat "${CONFIG}" | jq .github.repos | sed -r 's/(\[|\])//g' | tr -d ',')
-fi
+[[ -z "${GITHUB_REPOS// }" ]] && GITHUB_REPOS=$(cat "${CONFIG}" | jq .github.repos | sed -r 's/(\[|\])//g' | tr -d ',')
 
 while getopts ':h u: t: o: r: m: d:' option; do
     case "${option}" in
         h|\?) _usage
-              exit
-              ;;
+           exit 0
+           ;;
         u) GITHUB_USERNAME="${OPTARG}"
            ;;
         t) GITHUB_TOKEN="${OPTARG}"
