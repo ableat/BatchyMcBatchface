@@ -1,7 +1,16 @@
 #!/bin/bash
 
+DYING=0
+
+RED="\033[0;31m"
+GREEN="\033[32m"
+YELLOW="\033[33m"
+NC="\033[0m" #No color
+
+CONFIG="config.json"
+
 # Milestone Variables
-MILESTONE_TITLE=""
+#MILESTONE_TITLE=""
 MILESTONE_DURATION="14d"
 
 # GitHub Variables
@@ -10,6 +19,109 @@ GITHUB_TOKEN=""
 GITHUB_ORG_NAME=""
 GITHUB_REPOS=(
 )
+
+_log() {
+    echo -e ${0##*/}: "${@}" 1>&2
+}
+
+_warn() {
+    _log "${YELLOW}WARNING:${NC} ${@}"
+}
+
+_success() {
+    _log "${GREEN}SUCCESS:${NC} ${@}"
+}
+
+_die() {
+    _log "${RED}FATAL:${NC} ${@}"
+    if [ "${DYING}" -eq 0 ]; then
+        DYING=1
+    fi
+
+    exit 1
+}
+
+dependencies=(
+    "jq"
+    "curl"
+)
+for program in "${dependencies[@]}"; do
+    command -v $program >/dev/null 2>&1 || {
+        _die "${program} is not installed."
+    }
+done
+
+_usage() {
+cat << EOF
+
+${0##*/} [-h] [-b basename] -- program to automate sprint milestones for agile development
+where:
+    -u  set github user name
+    -t  set github api token
+    -o  set github organization
+    -r  set github repos
+    -m  set milestone title
+    -d  set milestone duration
+
+EOF
+}
+
+#Create config file if it doesn't exist
+if [ ! -f "${CONFIG}" ]; then
+cat << EOF > "${CONFIG}"
+{
+    "github": {
+        "user_name": "",
+        "api_token": "",
+        "organization": "",
+        "repos": []
+    },
+    "milestone": {
+        "title": "",
+        "duration": ""
+    }
+}
+EOF
+fi
+
+[[ -z "${GITHUB_USERNAME// }" ]] && GITHUB_USERNAME=$(cat "${CONFIG}" | jq .github.user_name | tr -d '"')
+
+[[ -z "${GITHUB_TOKEN// }" ]] && GITHUB_TOKEN=$(cat "${CONFIG}" | jq .github.api_token | tr -d '"')
+
+[[ -z "${GITHUB_ORG_NAME// }" ]] && GITHUB_ORG_NAME=$(cat "${CONFIG}" | jq .github.organization | tr -d '"')
+
+[[ -z "${MILESTONE_TITLE// }" ]] && MILESTONE_TITLE=$(cat "${CONFIG}" | jq .milestone.title | tr -d '"')
+
+[[ -z "${MILESTONE_DURATION// }" ]] && MILESTONE_DURATION=$(cat "${CONFIG}" | jq .milestone.duration | tr -d '"')
+
+if [[ -z "${GITHUB_REPOS// }" ]]; then
+    GITHUB_REPOS=$(cat "${CONFIG}" | jq .github.repos | sed -r 's/(\[|\])//g' | tr -d ',')
+fi
+
+while getopts ':h u: t: o: r: m: d:' option; do
+    case "${option}" in
+        h|\?) _usage
+              exit
+              ;;
+        u) GITHUB_USERNAME="${OPTARG}"
+           ;;
+        t) GITHUB_TOKEN="${OPTARG}"
+           ;;
+        o) GITHUB_ORG_NAME="${OPTARG}"
+           ;;
+        r) GITHUB_REPOS="${OPTARG}"
+           ;;
+        m) MILESTONE_TITLE="${OPTARG}"
+           ;;
+        d) MILESTONE_DURATION="${OPTARG}"
+           ;;
+        :) printf "missing argument for -%s\n" "${OPTARG}"
+           _usage
+           exit 1
+           ;;
+    esac
+done
+shift $((OPTIND - 1))
 
 # Calculated Variables
 milestone_due_date=$(date -j -v+${MILESTONE_DURATION} -u +"%Y-%m-%dT14:00:00Z")
