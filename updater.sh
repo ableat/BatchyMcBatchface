@@ -10,7 +10,7 @@ NC="\033[0m" #No color
 CONFIG="config.json"
 
 # Milestone Variables
-#MILESTONE_TITLE=""
+MILESTONE_TITLE=""
 MILESTONE_DURATION="14d"
 
 # GitHub Variables
