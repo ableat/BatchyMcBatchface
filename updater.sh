@@ -107,13 +107,11 @@ done
 
 _usage() {
 cat << EOF
-
 $(echo -e "Welcome to the ${c_title}GitHub Batch Milestone Updater${CLR_COLOR}")
 
-This program allows ends users of organizations to
-update specified repositories with new milestones
+This program allows end users of GitHub Organizations to update specified repositories with identical milestones
 
-Please refer to the usage below
+NOTE: A config file is generated when the program is first run. Command line arguments trump config file parameters. The config file needs to be located in the same location as the script.
 
 $(echo -e "${c_usage}usage:${CLR_COLOR} ./${0##*/} ${c_command_title}[option] <command>${CLR_COLOR}")
 
