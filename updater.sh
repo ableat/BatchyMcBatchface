@@ -275,11 +275,11 @@ done
 
 # How'd we do?
 repo_success_percent=$((repo_count_success*100/repo_count_total))
-repo_success_color=$GRN_COLOR
+repo_success_color=$c_success
 
 if [[ $repo_success_percent -lt 100 && $repo_success_percent -gt 75 ]]; then
     repo_success_color=$c_warning
-else
+elif [[ $repo_success_percent -lt 76 ]]; then
     repo_success_color=$c_fatal
 fi
 
