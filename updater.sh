@@ -34,10 +34,10 @@ c_command_example=$PUR_COLOR
 c_url=$CYN_COLOR
 c_url_action=$LGRN_COLOR
 c_gh_label=$LCYN_COLOR
-c_repo=$LRED_COLOR
+c_repo=$ORG_COLOR
 c_milestone=$PUR_COLOR
 c_bad_response=$RED_COLOR
-c_variable=$YEL_COLOR
+c_variable=$GRN_COLOR
 c_issue=$ORG_COLOR
 
 # Deep log colors
@@ -254,39 +254,39 @@ for gh_repo in "${GITHUB_REPOS[@]}"; do
         milestone_number=$(curl -s -X "POST" "${gh_ep_repos}/${GITHUB_ORG_NAME}/${gh_repo}/milestones" -H "Content-Type: application/json; charset=utf-8" -u ${gh_up} -d "{ \"title\": \"${MILESTONE_TITLE}\", \"state\": \"open\", \"description\": \"Welcome to ${MILESTONE_TITLE}. We have all kinds of cool things in store...\", \"due_on\": \"${milestone_due_date}\" }"  | jq .number)
         previous_milestone_number=$((milestone_number-1))
         [[ $previous_milestone_number -lt 0 ]] && previous_milestone_number=0
-        _debug "Previous milestone number is ${c_milestone}${previous_milestone_number}${CLR_COLOR}"
+        _debug "${c_milestone}Milestone #${previous_milestone_number}${CLR_COLOR} is the current (to be closed) milestone number"
         _success "Created ${c_milestone}${MILESTONE_TITLE}${CLR_COLOR} milestone"
 
         ## Add Ready and In Progress Issues to the New Milestone
         for repo_issue in ${repo_issues_to_move[@]}; do
             _debug "Adding issue ${c_issue}#${repo_issue}${CLR_COLOR} to ${c_milestone}${MILESTONE_TITLE}${CLR_COLOR} milestone with ${c_url_action}PATCH${CLR_COLOR} ${c_url}${gh_ep_repos}/${GITHUB_ORG_NAME}/${gh_repo}/issues/${repo_issue}${CLR_COLOR}"
             repo_milestone_number=$(curl -s -X "PATCH" "${gh_ep_repos}/${GITHUB_ORG_NAME}/${gh_repo}/issues/${repo_issue}" -H "Content-Type: application/json; charset=utf-8" -u ${gh_up} -d $"{ \"milestone\": ${milestone_number} }" | jq .milestone.number)
-            [[ $repo_milestone_number -eq $milestone_number ]] && _success "Added ${c_issue}#${repo_issue}${CLR_COLOR} to ${c_milestone}${MILESTONE_TITLE}${CLR_COLOR}" || _warn "Did not add ${c_issue}#${repo_issue}${CLR_COLOR} to ${c_milestone}${MILESTONE_TITLE}${CLR_COLOR} :("
+            [[ $repo_milestone_number -eq $milestone_number ]] && _success "Added issue ${c_issue}#${repo_issue}${CLR_COLOR} to ${c_milestone}${MILESTONE_TITLE}${CLR_COLOR} milestone" || _warn "Did not add issue ${c_issue}#${repo_issue}${CLR_COLOR} to ${c_milestone}${MILESTONE_TITLE}${CLR_COLOR} milestone :("
         done
 
         # Close the previous milestone :)
         if [[ $previous_milestone_number -gt 0 ]]; then
             _debug "Closing ${c_milestone}milestone #${previous_milestone_number}${CLR_COLOR} with ${c_url_action}PATCH${CLR_COLOR} ${c_url}${gh_ep_repos}/${GITHUB_ORG_NAME}/${gh_repo}/milestones/${previous_milestone_number}${CLR_COLOR}"
             milestone_state=$(curl -s -X "PATCH" "${gh_ep_repos}/${GITHUB_ORG_NAME}/${gh_repo}/milestones/${previous_milestone_number}" -H "Content-Type: application/json; charset=utf-8" -u ${gh_up} -d $"{ \"state\": \"closed\" }" | jq -r .state)
-            [[ ${milestone_state} -eq "closed" ]] && _success "${c_milestone}Milestone #${previous_milestone_number}${CLR_COLOR} closed" || _warn "${c_milestone}Milestone #${previous_milestone_number}${CLR_COLOR} was not closed :("
+            [[ ${milestone_state} -eq "closed" ]] && _success "Closed ${c_milestone}milestone #${previous_milestone_number}${CLR_COLOR} for the ${c_repo}${gh_repo}${CLR_COLOR} repository" || _warn "Failed to close ${c_milestone}milestone #${previous_milestone_number}${CLR_COLOR} for the ${c_repo}${gh_repo}${CLR_COLOR} repository :("
         fi
         ((repo_count_success+=1))
-        _success "Updated ${c_repo}${gh_repo}${CLR_COLOR} with ${c_milestone}${MILESTONE_TITLE}${CLR_COLOR} milestone "
+        _success "Updated ${c_repo}${gh_repo}${CLR_COLOR} repository with ${c_milestone}${MILESTONE_TITLE}${CLR_COLOR} milestone "
     fi
 done
 
 # How'd we do?
-repo_success_percent=$((repo_success_percent*100/repo_count_total*100))
+repo_success_percent=$((repo_count_success*100/repo_count_total))
 repo_success_color=$GRN_COLOR
 
 if [[ $repo_success_percent -lt 100 && $repo_success_percent -gt 75 ]]; then
-    repo_success_color=$YEL_COLOR
+    repo_success_color=$c_warning
 else
-    repo_success_color=$RED_COLOR
+    repo_success_color=$c_fatal
 fi
 
 if [[ $repo_success_percent -lt 100 ]]; then
-    _warn "Updated ${repo_success_color}${repo_success_percent}%${CLR_COLOR} (${c_variable}${repo_count_success}/${repo_count_total}${CLR_COLOR}) of repos with ${c_milestone}${MILESTONE_TITLE}${CLR_COLOR} milestone :|"
+    _warn "Only updated ${repo_success_color}${repo_success_percent}%${CLR_COLOR} (${c_variable}${repo_count_success}/${repo_count_total}${CLR_COLOR}) of repos with ${c_milestone}${MILESTONE_TITLE}${CLR_COLOR} milestone :|"
 else
     _success "Updated ${repo_success_color}${repo_success_percent}%${CLR_COLOR} (${c_variable}${repo_count_success}/${repo_count_total}${CLR_COLOR}) of repos with ${c_milestone}${MILESTONE_TITLE}${CLR_COLOR} milestone :)"
 fi
