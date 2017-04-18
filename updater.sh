@@ -25,7 +25,7 @@ LRED_COLOR="\033[1;31m"
 # Help colors
 c_title=$LCYN_COLOR
 c_usage=$CYN_COLOR
-c_command_title==$YEL_COLOR
+c_command_title=$YEL_COLOR
 c_command=$WHT_COLOR
 c_command_variable=$ORG_COLOR
 c_command_example=$PUR_COLOR
