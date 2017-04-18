@@ -1,7 +1,7 @@
 #!/bin/bash
 
 DYING=0
-VERBOSE=false
+VERBOSE=0
 
 ## All Colors
 RED_COLOR="\033[0;31m"
@@ -70,7 +70,7 @@ _log() {
 }
 
 _debug() {
-    if $VERBOSE ; then
+    if [ "${VERBOSE}" -eq 1 ]; then
         _log "${c_debug}DEBUG:${CLR_COLOR} ${@}"
     fi
 }
@@ -174,7 +174,7 @@ while getopts ':h u: t: o: r: m: d: :v' option; do
            ;;
         d) MILESTONE_DURATION="${OPTARG}"
            ;;
-        v) VERBOSE=true
+        v) VERBOSE=1
            ;;
         :) printf "missing argument for -%s\n" "${OPTARG}"
            _usage
