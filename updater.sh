@@ -38,6 +38,8 @@ _success() {
 
 _die() {
     _log "${RED}FATAL:${NC} ${@}"
+    _log "${RED}FATAL:${NC} Going down in flames!"
+
     if [ "${DYING}" -eq 0 ]; then
         DYING=1
     fi
@@ -58,14 +60,23 @@ done
 _usage() {
 cat << EOF
 
-${0##*/} [-h] [-b basename] -- program to automate sprint milestones for agile development
-where:
-    -u  set github user name
-    -t  set github api token
-    -o  set github organization
-    -r  set github repos
-    -m  set milestone title
-    -d  set milestone duration
+Welcome to the GitHub Batch Milestone Updater
+
+This program allows ends users of organizations to
+update specified repositories with new milestones
+
+Please refer to the usage below
+
+usage: ${0##*/} [-h] <command>
+
+commands:
+    -h                      display usage
+    -u  username            set github user name (-u binarybeard)
+    -t  token               set github api token (-t "1234567890abcdefg")
+    -o  organization        set github organization (-o Acme)
+    -r  repo1,repo2,etc     set github repos (-r awesome-repo-1,cool_repo_2)
+    -m  milestone           set milestone title (-m "Sprint 7")
+    -d  duration            set milestone duration (-d 7d)
 
 EOF
 }
@@ -89,16 +100,20 @@ EOF
 fi
 
 [[ -z "${GITHUB_USERNAME// }" ]] && GITHUB_USERNAME=$(jq -r .github.user_name "${CONFIG}")
-
 [[ -z "${GITHUB_TOKEN// }" ]] && GITHUB_TOKEN=$(jq -r .github.api_token "${CONFIG}")
-
 [[ -z "${GITHUB_ORG_NAME// }" ]] && GITHUB_ORG_NAME=$(jq -r .github.organization "${CONFIG}")
-
 [[ -z "${MILESTONE_TITLE// }" ]] && MILESTONE_TITLE=$(jq -r .milestone.title "${CONFIG}")
-
 [[ -z "${MILESTONE_DURATION// }" ]] && MILESTONE_DURATION=$(jq -r .milestone.duration "${CONFIG}")
-
 [[ -z "${GITHUB_REPOS// }" ]] && GITHUB_REPOS=( $(jq -r '.github.repos | .[]' "${CONFIG}") )
+
+# Kill everything!
+[[ -z "${GITHUB_USERNAME}" ]] && _die "GitHub username is blank"
+[[ -z "${GITHUB_TOKEN}" ]] && _die "GitHub API token is blank"
+[[ -z "${GITHUB_ORG_NAME}" ]] && _die "GitHub organization name is blank"
+[[ -z "${MILESTONE_TITLE}" ]] && _die "GitHub new milestone title is blank"
+[[ -z "${MILESTONE_DURATION}" ]] && _die "GitHub milestone duration is blank"
+[[ ${#GITHUB_REPOS[@]} -lt 1 ]] && _die "GitHub repos are empty"
+
 
 while getopts ':h u: t: o: r: m: d:' option; do
     case "${option}" in
