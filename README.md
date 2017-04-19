@@ -1,4 +1,4 @@
-# GitHub Batch Milestone Updater
+# Batchy McBatchface
 
 ![Necessary Screenshot](docs/screenshots/041917-help.png)
 
