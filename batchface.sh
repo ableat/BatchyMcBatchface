@@ -107,7 +107,7 @@ done
 
 _usage() {
 cat << EOF
-$(echo -e "Welcome to the ${c_title}GitHub Batch Milestone Updater${CLR_COLOR}")
+$(echo -e "Welcome to ${c_title}Batchy McBatchface${CLR_COLOR}")
 
 This program allows end users of GitHub Organizations to update specified repositories with identical milestones
 
