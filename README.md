@@ -26,9 +26,9 @@
 
 ## Contributing
 
-We welcome contributions from every type of person. If you're new to coding, **great**! If you've never contributed to an open-source project, **awesome**! If you're a super seasoned engineer and find a bug, typo, bad logic, etc., **phenomenal**! 
+We welcome contributions from every type of person. If you're new to coding, **great**! If you've never contributed to an open-source project, **awesome**! If you're a super seasoned engineer and find a bug, typo, bad logic, etc., **phenomenal**!
 
-We have no formal git-flow or guidelines to submit a pull request, yet, so if you think something should change, [Submit an Issue](issues/new) or write some code and Submit a Pull Request. 
+We have no formal git-flow or guidelines to submit a pull request, yet, so if you think something should change, [Create an Issue](https://github.com/ableat/batch-milestone-updater/issues/new) or write some code and Submit a Pull Request.
 
 ### Maintainers
 
@@ -36,4 +36,4 @@ This project is maintained by [Sam](https://github.com/binarybeard) and [Eli Gla
 
 ## License
 
-Code is under the [MIT License](LICENSE.txt). Documentation is under the [Creative Commons Attribution license]().
+Code is under the [MIT License](LICENSE). Documentation is under the [Creative Commons Attribution license]().
