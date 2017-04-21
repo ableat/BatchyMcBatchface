@@ -3,22 +3,39 @@
 DYING=0
 VERBOSE=0
 
-_setColors() {
-    RED_COLOR="\033[0;31m"; GRN_COLOR="\033[0;32m"; ORG_COLOR="\033[0;33m"; BLU_COLOR="\033[0;34m";
-    PUR_COLOR="\033[0;35m"; YEL_COLOR="\033[1;33m"; LBLU_COLOR="\033[1;34m"; LPUR_COLOR="\033[1;35m";
-    LCYN_COLOR="\033[1;36m"; WHT_COLOR="\033[0;37m"; CLR_COLOR="\033[0m"; LGRN_COLOR="\033[1;32m";
-    CYN_COLOR="\033[0;36m"; LGRY_COLOR="\033[0;37m"; BLK_COLOR="\033[0;30m"; DGRY_COLOR="\033[1;30m";
-    LRED_COLOR="\033[1;31m"
+colors=(
+    RED_COLOR,"\033[0;31m"
+    GRN_COLOR,"\033[0;32m"
+    ORG_COLOR,"\033[0;33m"
+    BLU_COLOR,"\033[0;34m"
+    PUR_COLOR,"\033[0;35m"
+    YEL_COLOR,"\033[1;33m"
+    LBLU_COLOR,"\033[1;34m"
+    LPUR_COLOR,"\033[1;35m"
+    LCYN_COLOR,"\033[1;36m"
+    WHT_COLOR,"\033[0;37m"
+    CLR_COLOR,"\033[0m"
+    LGRN_COLOR,"\033[1;32m"
+    CYN_COLOR,"\033[0;36m"
+    LGRY_COLOR,"\033[0;37m"
+    BLK_COLOR,"\033[0;30m"
+    DGRY_COLOR,"\033[1;30m"
+    LRED_COLOR,"\033[1;31m"
+)
 
+_setColors() {
+    for color in "${colors[@]}"; do
+        IFS=', ' read -r -a pseudo_arr <<< "$color"
+        eval "${pseudo_arr[0]}=${pseudo_arr[1]}"
+    done
     _setDescriptiveColors
 }
 
-
 _blankColors() {
-    RED_COLOR=""; GRN_COLOR=""; ORG_COLOR=""; BLU_COLOR=""; PUR_COLOR=""; YEL_COLOR="";
-    LBLU_COLOR=""; LPUR_COLOR=""; LCYN_COLOR=""; WHT_COLOR=""; CLR_COLOR=""; LGRN_COLOR="";
-    CYN_COLOR=""; LGRY_COLOR=""; BLK_COLOR=""; DGRY_COLOR=""; LRED_COLOR=""
-
+    for color in "${colors[@]}"; do
+        IFS=', ' read -r -a pseudo_arr <<< "$color"
+        eval "${pseudo_arr[0]}=''"
+    done
     _setDescriptiveColors
 }
 
