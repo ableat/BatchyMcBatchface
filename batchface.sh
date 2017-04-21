@@ -3,48 +3,58 @@
 DYING=0
 VERBOSE=0
 
+colors=(
+    RED_COLOR,"\"\033[0;31m"\"
+    GRN_COLOR,"\"\033[0;32m"\"
+    ORG_COLOR,"\"\033[0;33m"\"
+    BLU_COLOR,"\"\033[0;34m"\"
+    PUR_COLOR,"\"\033[0;35m"\"
+    YEL_COLOR,"\"\033[1;33m"\"
+    LBLU_COLOR,"\"\033[1;34m"\"
+    LPUR_COLOR,"\"\033[1;35m"\"
+    LCYN_COLOR,"\"\033[1;36m"\"
+    WHT_COLOR,"\"\033[0;37m"\"
+    CLR_COLOR,"\"\033[0m"\"
+    LGRN_COLOR,"\"\033[1;32m"\"
+    CYN_COLOR,"\"\033[0;36m"\"
+    LGRY_COLOR,"\"\033[0;37m"\"
+    BLK_COLOR,"\"\033[0;30m"\"
+    DGRY_COLOR,"\"\033[1;30m"\"
+    LRED_COLOR,"\"\033[1;31m"\"
+)
+
+_setColors() {
+    for color in "${colors[@]}"; do
+        IFS=', ' read -r -a pseudo_arr <<< "$color"
+        eval "${pseudo_arr[0]}=${pseudo_arr[1]}"
+    done
+    _setDescriptiveColors
+}
+
+_blankColors() {
+    for color in "${colors[@]}"; do
+        IFS=', ' read -r -a pseudo_arr <<< "$color"
+        eval "${pseudo_arr[0]}=''"
+    done
+    _setDescriptiveColors
+}
+
+_setDescriptiveColors() {
+    # Help colors
+    c_title=$LCYN_COLOR; c_usage=$CYN_COLOR; c_command_title=$YEL_COLOR; c_command=$WHT_COLOR;
+    c_command_variable=$ORG_COLOR; c_command_example=$PUR_COLOR
+
+    # Log colors
+    c_url=$CYN_COLOR; c_url_action=$LGRN_COLOR; c_gh_label=$LCYN_COLOR; c_repo=$ORG_COLOR;
+    c_milestone=$PUR_COLOR; c_bad_response=$RED_COLOR; c_variable=$GRN_COLOR; c_issue=$ORG_COLOR
+
+    # Deep log colors
+    c_success=$GRN_COLOR; c_warning=$YEL_COLOR; c_fatal=$RED_COLOR; c_debug=$WHT_COLOR
+}
+
+
 ## All Colors
-RED_COLOR="\033[0;31m"
-GRN_COLOR="\033[0;32m"
-ORG_COLOR="\033[0;33m"
-BLU_COLOR="\033[0;34m"
-PUR_COLOR="\033[0;35m"
-YEL_COLOR="\033[1;33m"
-LBLU_COLOR="\033[1;34m"
-LPUR_COLOR="\033[1;35m"
-LCYN_COLOR="\033[1;36m"
-WHT_COLOR="\033[0;37m"
-CLR_COLOR="\033[0m"
-LGRN_COLOR="\033[1;32m"
-CYN_COLOR="\033[0;36m"
-LGRY_COLOR="\033[0;37m"
-BLK_COLOR="\033[0;30m"
-DGRY_COLOR="\033[1;30m"
-LRED_COLOR="\033[1;31m"
-
-# Help colors
-c_title=$LCYN_COLOR
-c_usage=$CYN_COLOR
-c_command_title=$YEL_COLOR
-c_command=$WHT_COLOR
-c_command_variable=$ORG_COLOR
-c_command_example=$PUR_COLOR
-
-# Log colors
-c_url=$CYN_COLOR
-c_url_action=$LGRN_COLOR
-c_gh_label=$LCYN_COLOR
-c_repo=$ORG_COLOR
-c_milestone=$PUR_COLOR
-c_bad_response=$RED_COLOR
-c_variable=$GRN_COLOR
-c_issue=$ORG_COLOR
-
-# Deep log colors
-c_success=$GRN_COLOR
-c_warning=$YEL_COLOR
-c_fatal=$RED_COLOR
-c_debug=$WHT_COLOR
+_setColors
 
 CONFIG="config.json"
 
@@ -117,6 +127,7 @@ $(echo -e "${c_usage}usage:${CLR_COLOR} ./${0##*/} ${c_command_title}[option] <c
 
 $(echo -e "${c_command_title}options:${CLR_COLOR}")
 $(echo -e "    ${c_command}-v${CLR_COLOR}                     verbose output")
+$(echo -e "    ${c_command}-n${CLR_COLOR}                     no color output")
 
 $(echo -e "${c_command_title}commands:${CLR_COLOR}")
 $(echo -e "    ${c_command}-h${CLR_COLOR}                     display this help message")
@@ -157,8 +168,10 @@ else
 fi
 
 # Getting options
-while getopts ':h u: t: o: r: m: d: :v' option; do
+while getopts ':n :h u: t: o: r: m: d: :v' option; do
     case "${option}" in
+        n) _blankColors
+           ;;
         h|\?) _usage
            exit 0
            ;;
