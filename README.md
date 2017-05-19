@@ -15,12 +15,12 @@
 ###### Same as above with a lot more logging to the console
 
 ```
-./batchface.sh -o ableat -r linux-kernel,web-app -m "Sprint 10" -d 7d
+./batchface.sh -o ableat -r linux-kernel,web-app -m "Sprint 10" -d 7
 ```
 ###### Updating the ableat organization's linux-kernel and web-app repositories with a milestone title of Sprint 10 and a duration of 7 days
 
 ```
-./batchface.sh -m "2.0.0 Release" -d 30d
+./batchface.sh -m "2.0.0 Release" -d 30
 ```
 ###### Updating organization repositories (provided by the config file) with a milestone title of 2.0.0 Release and a duration of 30 days
 
