@@ -52,7 +52,6 @@ _setDescriptiveColors() {
     c_success=$GRN_COLOR; c_warning=$YEL_COLOR; c_fatal=$RED_COLOR; c_debug=$WHT_COLOR
 }
 
-
 ## All Colors
 _setColors
 
@@ -72,8 +71,7 @@ MILESTONE_DURATION="14"
 GITHUB_USERNAME=""
 GITHUB_TOKEN=""
 GITHUB_ORG_NAME=""
-GITHUB_REPOS=(
-)
+declare -a GITHUB_REPOS
 
 _log() {
     echo -e ${0##*/}: "${@}" 1>&2
@@ -110,9 +108,7 @@ dependencies=(
 )
 
 for program in "${dependencies[@]}"; do
-    command -v $program >/dev/null 2>&1 || {
-        _die "${program} is not installed."
-    }
+    command -v $program >/dev/null 2>&1 || _die "${program} is not installed."
 done
 
 _usage() {
@@ -242,6 +238,7 @@ _debug "Milestone due date is set to ${c_variable}${milestone_due_date}${CLR_COL
 
 repo_count_total=0
 repo_count_success=0
+
 ## List Open and Ready Issues
 for gh_repo in "${GITHUB_REPOS[@]}"; do
     ((repo_count_total+=1))
