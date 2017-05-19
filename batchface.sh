@@ -136,7 +136,7 @@ $(echo -e "    ${c_command}-t${CLR_COLOR} ${c_command_variable}token${CLR_COLOR}
 $(echo -e "    ${c_command}-o${CLR_COLOR} ${c_command_variable}organization${CLR_COLOR}        set github organization (${c_command_example}-o Acme${CLR_COLOR})")
 $(echo -e "    ${c_command}-r${CLR_COLOR} ${c_command_variable}repo1,repo2,etc${CLR_COLOR}     set github repos (${c_command_example}-r awesome-repo-1,cool_repo_2${CLR_COLOR})")
 $(echo -e "    ${c_command}-m${CLR_COLOR} ${c_command_variable}milestone${CLR_COLOR}           set milestone title (${c_command_example}-m \"Sprint 7\"${CLR_COLOR})")
-$(echo -e "    ${c_command}-d${CLR_COLOR} ${c_command_variable}duration${CLR_COLOR}            set milestone duration (${c_command_example}-d 7${CLR_COLOR})")
+$(echo -e "    ${c_command}-d${CLR_COLOR} ${c_command_variable}duration${CLR_COLOR}            set milestone duration in days (${c_command_example}-d 7${CLR_COLOR})")
 
 EOF
 }
