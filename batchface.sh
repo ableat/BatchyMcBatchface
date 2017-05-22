@@ -3,6 +3,7 @@
 DYING=0
 VERBOSE=0
 
+# Colors are declared in this fashion to ensure compatibility with older versions of bash
 colors=(
     RED_COLOR,"\"\033[0;31m"\"
     GRN_COLOR,"\"\033[0;32m"\"
@@ -52,10 +53,10 @@ _setDescriptiveColors() {
     c_success=$GRN_COLOR; c_warning=$YEL_COLOR; c_fatal=$RED_COLOR; c_debug=$WHT_COLOR
 }
 
-
-## All Colors
+# Color output
 _setColors
 
+# Config file path
 CONFIG="config.json"
 
 gh_api_url="https://api.github.com"
@@ -72,8 +73,7 @@ MILESTONE_DURATION="14"
 GITHUB_USERNAME=""
 GITHUB_TOKEN=""
 GITHUB_ORG_NAME=""
-GITHUB_REPOS=(
-)
+declare -a GITHUB_REPOS
 
 _log() {
     echo -e ${0##*/}: "${@}" 1>&2
@@ -104,17 +104,17 @@ _die() {
     exit 1
 }
 
+# Check if dependencies are installed
 dependencies=(
     "jq"
     "curl"
 )
 
 for program in "${dependencies[@]}"; do
-    command -v $program >/dev/null 2>&1 || {
-        _die "${program} is not installed."
-    }
+    command -v $program >/dev/null 2>&1 || _die "${program} is not installed."
 done
 
+# Help text
 _usage() {
 cat << EOF
 $(echo -e "Welcome to ${c_title}Batchy McBatchface${CLR_COLOR}")
@@ -141,7 +141,7 @@ $(echo -e "    ${c_command}-d${CLR_COLOR} ${c_command_variable}duration${CLR_COL
 EOF
 }
 
-#Create config file if it doesn't exist
+# Create config file if it doesn't exist
 if [ ! -f "${CONFIG}" ]; then
 cat << EOF > "${CONFIG}"
 {
@@ -242,7 +242,8 @@ _debug "Milestone due date is set to ${c_variable}${milestone_due_date}${CLR_COL
 
 repo_count_total=0
 repo_count_success=0
-## List Open and Ready Issues
+
+# List Open and Ready Issues
 for gh_repo in "${GITHUB_REPOS[@]}"; do
     ((repo_count_total+=1))
     _debug "Checking ${c_url}${gh_ep_repos}/${GITHUB_ORG_NAME}/${gh_repo}${CLR_COLOR} for good response..."
