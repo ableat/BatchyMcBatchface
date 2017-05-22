@@ -2,6 +2,8 @@
 
 ![Necessary Screenshot](docs/screenshots/042017-help.png)
 
+Batchy McBatchface is a collective github [milestone](https://help.github.com/articles/about-milestones/) updater intended for agile shops. Batchface creates a new milestone with a specified due date, and closes the previous milestone (i.e. sprint) if applicable.
+
 ### Examples
 
 ```
