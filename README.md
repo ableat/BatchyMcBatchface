@@ -11,15 +11,21 @@ Batchy McBatchface is a collective github [milestone](https://help.github.com/ar
 ```
 ###### Standard command. Pulling all information from the local config file
 
+<br>
+
 ```
 ./batchface.sh -v
 ```
 ###### Same as above with a lot more logging to the console
 
+<br>
+
 ```
 ./batchface.sh -o ableat -r linux-kernel,web-app -m "Sprint 10" -d 7
 ```
 ###### Updating the ableat organization's linux-kernel and web-app repositories with a milestone title of Sprint 10 and a duration of 7 days
+
+<br>
 
 ```
 ./batchface.sh -m "2.0.0 Release" -d 30
