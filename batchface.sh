@@ -5,23 +5,23 @@ VERBOSE=0
 
 # Colors are declared in this fashion to ensure compatibility with older versions of bash
 colors=(
-    RED_COLOR,"\"\033[0;31m"\"
-    GRN_COLOR,"\"\033[0;32m"\"
-    ORG_COLOR,"\"\033[0;33m"\"
-    BLU_COLOR,"\"\033[0;34m"\"
-    PUR_COLOR,"\"\033[0;35m"\"
-    YEL_COLOR,"\"\033[1;33m"\"
-    LBLU_COLOR,"\"\033[1;34m"\"
-    LPUR_COLOR,"\"\033[1;35m"\"
-    LCYN_COLOR,"\"\033[1;36m"\"
-    WHT_COLOR,"\"\033[0;37m"\"
-    CLR_COLOR,"\"\033[0m"\"
-    LGRN_COLOR,"\"\033[1;32m"\"
-    CYN_COLOR,"\"\033[0;36m"\"
-    LGRY_COLOR,"\"\033[0;37m"\"
-    BLK_COLOR,"\"\033[0;30m"\"
-    DGRY_COLOR,"\"\033[1;30m"\"
-    LRED_COLOR,"\"\033[1;31m"\"
+    RED_COLOR,"\"\033[0;31m\""
+    GRN_COLOR,"\"\033[0;32m\""
+    ORG_COLOR,"\"\033[0;33m\""
+    BLU_COLOR,"\"\033[0;34m\""
+    PUR_COLOR,"\"\033[0;35m\""
+    YEL_COLOR,"\"\033[1;33m\""
+    LBLU_COLOR,"\"\033[1;34m\""
+    LPUR_COLOR,"\"\033[1;35m\""
+    LCYN_COLOR,"\"\033[1;36m\""
+    WHT_COLOR,"\"\033[0;37m\""
+    CLR_COLOR,"\"\033[0m\""
+    LGRN_COLOR,"\"\033[1;32m\""
+    CYN_COLOR,"\"\033[0;36m\""
+    LGRY_COLOR,"\"\033[0;37m\""
+    BLK_COLOR,"\"\033[0;30m\""
+    DGRY_COLOR,"\"\033[1;30m\""
+    LRED_COLOR,"\"\033[1;31m\""
 )
 
 _setColors() {
@@ -255,7 +255,7 @@ for gh_repo in "${GITHUB_REPOS[@]}"; do
         _debug "Received good response from ${c_url}${gh_ep_repos}/${GITHUB_ORG_NAME}/${gh_repo}${CLR_COLOR}"
         _log "Updating ${c_repo}${gh_repo}${CLR_COLOR} repository..."
 
-        ## Get all Open + Ready/In Progress Issues
+        # Get all Open + Ready/In Progress Issues
         _debug "Getting ${c_gh_label}ready${CLR_COLOR} issues from ${c_url}${gh_ep_repos}/${GITHUB_ORG_NAME}/${gh_repo}/issues?state=open&labels=ready${CLR_COLOR}"
         repo_issues_ready=$(curl -s "${gh_ep_repos}/${GITHUB_ORG_NAME}/${gh_repo}/issues?state=open&labels=ready" -u "${gh_up}" | jq .[].number)
         _debug "Getting ${c_gh_label}in progress${CLR_COLOR} issues from ${c_url}${gh_ep_repos}/${GITHUB_ORG_NAME}/${gh_repo}/issues?state=open&labels=in%20progress${CLR_COLOR}"
@@ -269,7 +269,7 @@ for gh_repo in "${GITHUB_REPOS[@]}"; do
         _debug "${c_milestone}Milestone #${previous_milestone_number}${CLR_COLOR} is the current (to be closed) milestone number"
         _success "Created ${c_milestone}${MILESTONE_TITLE}${CLR_COLOR} milestone"
 
-        ## Add Ready and In Progress Issues to the New Milestone
+        # Add Ready and In Progress Issues to the New Milestone
         for repo_issue in ${repo_issues_to_move[@]}; do
             _debug "Adding issue ${c_issue}#${repo_issue}${CLR_COLOR} to ${c_milestone}${MILESTONE_TITLE}${CLR_COLOR} milestone with ${c_url_action}PATCH${CLR_COLOR} ${c_url}${gh_ep_repos}/${GITHUB_ORG_NAME}/${gh_repo}/issues/${repo_issue}${CLR_COLOR}"
             repo_milestone_number=$(curl -s -X "PATCH" "${gh_ep_repos}/${GITHUB_ORG_NAME}/${gh_repo}/issues/${repo_issue}" -H "Content-Type: application/json; charset=utf-8" -u ${gh_up} -d $"{ \"milestone\": ${milestone_number} }" | jq .milestone.number)
