@@ -2,6 +2,7 @@
 
 DYING=0
 VERBOSE=0
+DRY_RUN=0
 
 # Colors are declared in this fashion to ensure compatibility with older versions of bash
 colors=(
@@ -128,6 +129,7 @@ $(echo -e "${c_usage}usage:${CLR_COLOR} ./${0##*/} ${c_command_title}[option] <c
 $(echo -e "${c_command_title}options:${CLR_COLOR}")
 $(echo -e "    ${c_command}-v${CLR_COLOR}                     verbose output")
 $(echo -e "    ${c_command}-n${CLR_COLOR}                     no color output")
+$(echo -e "    ${c_command}-x${CLR_COLOR}                     dry run")
 
 $(echo -e "${c_command_title}commands:${CLR_COLOR}")
 $(echo -e "    ${c_command}-h${CLR_COLOR}                     display this help message")
@@ -168,7 +170,7 @@ else
 fi
 
 # Getting options
-while getopts ':n :h u: t: o: r: m: d: :v' option; do
+while getopts ':n :h u: t: o: r: m: d: :v :x' option; do
     case "${option}" in
         n) _blankColors
            ;;
@@ -186,6 +188,8 @@ while getopts ':n :h u: t: o: r: m: d: :v' option; do
         m) MILESTONE_TITLE="${OPTARG}"
            ;;
         d) MILESTONE_DURATION="${OPTARG}"
+           ;;
+        x) DRY_RUN=1
            ;;
         v) VERBOSE=1
            ;;
@@ -212,6 +216,10 @@ _debug "Milestone duration exists"
 [[ ${#GITHUB_REPOS[@]} -lt 1 ]] && _die "GitHub repos are empty"
 _debug "Repository array is not empty"
 
+if [ "${DRY_RUN}" -eq 1 ]; then
+    # Do something magical
+fi
+
 # Validate setting variables
 _debug "Validating setting variables..."
 ! [[ "${MILESTONE_DURATION}" =~ ^[0-9] ]] && _die "Milestone duration does not match ^[0-9] regular expression"
@@ -221,6 +229,7 @@ _debug "Milestone duration has been validated"
 gh_up="${GITHUB_USERNAME}:${GITHUB_TOKEN}"
 
 # Kill everything... if we can't API it! (Yes, API is a verb)
+# API is not a verb.......
 _debug "Checking ${c_url}${gh_ep_users}/${GITHUB_USERNAME}${CLR_COLOR} for good response..."
 gh_usr_res=$(curl -s -o /dev/null -w "%{http_code}" "${gh_ep_users}/${GITHUB_USERNAME}")
 [[ $gh_usr_res -ne "200" ]] && _die "GitHub username does not exist"
